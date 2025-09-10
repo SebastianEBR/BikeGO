@@ -2,8 +2,8 @@ package org.uniquindio.edu.co.pdc.model;
 
 public enum TypeBike {
 
-    ELECTRICA(1),
-    CONVENCIONAL(2);
+    ELECTRIC(1),
+    CONVENTIONAL(2);
 
     private int value;
 

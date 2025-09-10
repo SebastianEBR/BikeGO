@@ -2,10 +2,11 @@ package org.uniquindio.edu.co.pdc.model;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Random;
 
-public class Empresa {
+public class Company {
 
-    private static Empresa instance;
+    private static Company instance;
 
     private String name;
     private String nit;
@@ -13,23 +14,25 @@ public class Empresa {
     //conection with other classes
     private ArrayList<Bike> listBikes;
     private ArrayList<User> listUsuarios;
-    private ArrayList<Estacion> listEstaciones;
-    private ArrayList<Alquiler> listAlquireres;
+    private ArrayList<Station> listEstaciones;
+    private ArrayList<Rental> listRental;
 
-    private Alquiler alquiler;
+    private Rental rental;
 
-    private Empresa(){
+    private Company(String name, String nit){
+        this.name = name;
+        this.nit = nit;
         this.listBikes = new ArrayList<>();
         this.listUsuarios = new ArrayList<>();
         this.listEstaciones = new ArrayList<>();
-        this.listAlquireres = new ArrayList<>();
+        this.listRental = new ArrayList<>();
     }
 
-    public ArrayList<Estacion> getListEstaciones() {
+    public ArrayList<Station> getListEstaciones() {
         return listEstaciones;
     }
 
-    public void setListEstaciones(ArrayList<Estacion> listEstaciones) {
+    public void setListEstaciones(ArrayList<Station> listEstaciones) {
         this.listEstaciones = listEstaciones;
     }
 
@@ -65,21 +68,23 @@ public class Empresa {
         this.name = name;
     }
 
-    public static Empresa getInstance(){
+    public static Company getInstance(String name, String nit){
         if (instance == null){
-            instance = new Empresa();
+            instance = new Company(name, nit);
         }
         return instance;
     }
 
     @Override
     public String toString() {
-        return "Empresa{" +
-                "listEstaciones=" + listEstaciones +
-                ", listUsuarios=" + listUsuarios +
-                ", listBikes=" + listBikes +
+        return "Company{" +
+                "name='" + name + '\'' +
                 ", nit='" + nit + '\'' +
-                ", name='" + name + '\'' +
+                ", listBikes=" + listBikes +
+                ", listUsuarios=" + listUsuarios +
+                ", listEstaciones=" + listEstaciones +
+                ", listRental=" + listRental +
+                ", rental=" + rental +
                 '}';
     }
 
@@ -110,31 +115,31 @@ public class Empresa {
         return listBikes.stream().filter(b -> b.getPlate().equals(plate)).findFirst();
     }
 
-    public void registerEstacion(Estacion estacion){
-        Optional<Estacion> eOptional = findEstacionByAddress(estacion.getAddress());
+    public void registerEstacion(Station station){
+        Optional<Station> eOptional = findEstacionByAddress(station.getAddress());
         if (eOptional.isPresent()){
-            throw new IllegalArgumentException("no pueden haber 2 estaciones con la misma direccion: " +estacion.getAddress());
+            throw new IllegalArgumentException("no pueden haber 2 estaciones con la misma direccion: " + station.getAddress());
         } else{
-            listEstaciones.add(estacion);
+            listEstaciones.add(station);
         }
     }
 
-    public Optional<Estacion> findEstacionByAddress(String address){
+    public Optional<Station> findEstacionByAddress(String address){
         return listEstaciones.stream().filter(e -> e.getAddress().equals(address)).findFirst();
     }
 
 
-    public void registerAlquiler(Alquiler alquiler){
-        Optional<Alquiler> aOptional = findAlquilerByCode(alquiler.getCode());
-        if (aOptional.isPresent()){
-            throw new IllegalArgumentException("no pueden haber 2 alquileres con el misma codigo: " + alquiler.getCode());
+    public void registerRental(Rental rental){
+        Optional<Rental> rOptional = findRentalByCode(rental.getCode());
+        if (rOptional.isPresent()){
+            throw new IllegalArgumentException("no pueden haber 2 alquileres con el misma codigo: " + rental.getCode());
         } else{
-            listAlquireres.add(alquiler);
+            listRental.add(rental);
         }
     }
 
-    public Optional<Alquiler> findAlquilerByCode(String code){
-        return listAlquireres.stream().filter(a -> a.getCode().equals(code)).findFirst();
+    public Optional<Rental> findRentalByCode(Random code){
+        return listRental.stream().filter(a -> a.getCode().equals(code)).findFirst();
     }
 
 

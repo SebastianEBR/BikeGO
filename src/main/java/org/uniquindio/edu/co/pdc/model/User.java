@@ -76,6 +76,19 @@ public class User {
         this.email = email;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "bike=" + bike +
+                ", name='" + name + '\'' +
+                ", id='" + id + '\'' +
+                ", phone='" + phone + '\'' +
+                ", address='" + address + '\'' +
+                ", age=" + age +
+                ", email='" + email + '\'' +
+                '}';
+    }
+
     public static class Builder{
 
         private String name;
