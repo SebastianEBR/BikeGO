@@ -16,7 +16,7 @@ public class Main {
                 .build();
         User u2 = new User.Builder()
                 .name("Sebas")
-                .id("1059")
+                .id("1058")
                 .address("Carrera")
                 .phone("313131")
                 .build();
@@ -31,12 +31,15 @@ public class Main {
         BikeGO.registerUser(u1);
         BikeGO.registerUser(u2);
 
-        System.out.println(BikeGO.toString());
-        System.out.println(b1.toString());
-        System.out.println(b2.toString());
-        System.out.println(u1.toString());
-        System.out.println(u2.toString());
-        System.out.println(s1.toString());
-        System.out.println(s2.toString());
+        BikeGO.asignarBikeStation(b1, s1);
+        BikeGO.asignarBikeStation(b2, s1);
+
+        s1.goBike(u1);
+
+
+
+        String recibo = s2.arriveBike(b1);
+        System.out.println(recibo);
+        System.out.println(BikeGO);
     }
 }

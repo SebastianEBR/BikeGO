@@ -116,7 +116,7 @@ public class Company {
     }
 
     public void registerEstacion(Station station){
-        Optional<Station> eOptional = findEstacionByAddress(station.getAddress());
+        Optional<Station> eOptional = findStationByAddress(station.getAddress());
         if (eOptional.isPresent()){
             throw new IllegalArgumentException("no pueden haber 2 estaciones con la misma direccion: " + station.getAddress());
         } else{
@@ -124,7 +124,7 @@ public class Company {
         }
     }
 
-    public Optional<Station> findEstacionByAddress(String address){
+    public Optional<Station> findStationByAddress(String address){
         return listEstaciones.stream().filter(e -> e.getAddress().equals(address)).findFirst();
     }
 
@@ -143,4 +143,28 @@ public class Company {
     }
 
 
+    public void asignarBikeStation(Bike bike, Station station){
+        Optional<Station> sOptional = findStationByAddress(station.getAddress());
+        Optional<Bike> bOptional = findBikeByPlate(bike.getPlate());
+        if (sOptional.isPresent() && bOptional.isPresent()){
+            Station sAux = sOptional.get();
+            Bike[] bikes = sAux.getBikes();
+
+            for (int i = 0; i < 10; i++){
+                Bike bAux = bikes[i];
+
+                if(bAux == null){
+                    bikes[i] = bike;
+                    break;
+                }else{
+                    if (bAux.getPlate().equals(bike.getPlate())){
+                        throw new IllegalArgumentException("no pueden haber 2 bicis con el misma placa: " + bike.getPlate());
+                    }
+                }
+            }
+        }else{
+            throw new IllegalArgumentException("no estan presentes: " + bike + station);
+        }
+
+    }
 }

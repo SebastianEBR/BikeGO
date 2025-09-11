@@ -6,15 +6,22 @@ import java.util.Random;
 
 public class Rental {
 
-    private final Bike bike;
+    private static Rental instance;
+    private Bike bike;
     private LocalTime startTime;
     private LocalTime endTime;
     private Random code;
     private double price;
 
-    public Rental(Bike bike, Random code) {
-        this.bike = bike;
-        this.code = code;
+    private Rental() {
+
+    }
+
+    public static Rental getInstance(){
+        if (instance == null){
+            instance = new Rental();
+        }
+        return instance;
     }
 
     public Bike getBike() {
@@ -57,12 +64,12 @@ public class Rental {
         this.startTime = LocalTime.now();
     }
 
-    public void endRental() {
+    public void endRental(Bike bike) {
         this.endTime = LocalTime.now();
-        this.price = calculatePrice();
+        this.price = calculatePrice(bike);
     }
 
-    private double calculatePrice() {
+    private double calculatePrice(Bike bike) {
         double rate;
 
         if (bike.getTypeBike() == TypeBike.ELECTRIC) {
@@ -76,8 +83,8 @@ public class Rental {
         return seconds * rate;
     }
 
-    public String generateReceipt() {
-        endRental();
+    public String generateReceipt(Bike bike) {
+        endRental(bike);
         this.code = new Random();
         return toString();
     }

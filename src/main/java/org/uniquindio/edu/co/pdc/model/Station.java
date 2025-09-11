@@ -41,27 +41,36 @@ public class Station {
     }
 
     public String arriveBike(Bike bike){
+        Rental rental = Rental.getInstance();
         String receipt = "";
         for (int i = 0; i < CANTBIKES  ; i++){
             if (bikes[i] == null){
                 bikes[i] = bike;
-                receipt = rental.generateReceipt();
-            } else{
-                throw new IllegalArgumentException("no hay mas espacio para bicicletas, esta en el tope: " + i);
+                User user = bike.getUser();
+                user.setBike(null);
+                bike.setUser(null);
+
+                receipt = rental.generateReceipt(bike);
+                break;
             }
         }
         return receipt;
     }
 
 
-    public void goBike(Bike bike){
-
+    public void goBike(User user){
+        Rental rental = Rental.getInstance();
         for (int i = 0; i < CANTBIKES  ; i++){
-            if (bikes[i] == bike){
+
+            if (bikes[i] != null){
+                Bike bAux = bikes[i];
+                user.setBike(bAux);
+                bAux.setUser(user);
                 bikes[i] = null;
                 rental.startRental();
+                break;
             } else{
-                throw new IllegalArgumentException("no esta esa bicicleta, en la pos: " + i);
+                throw new IllegalArgumentException("no hay bicicletas en esta estacion: ");
             }
         }
     }
