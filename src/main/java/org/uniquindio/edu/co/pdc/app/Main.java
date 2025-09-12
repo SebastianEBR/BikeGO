@@ -7,8 +7,8 @@ public class Main {
     public static void main(String[] args){
         Company BikeGO = Company.getInstance("name", "102121");
 
-        Bike b1 = new Bike(TypeBike.ELECTRIC, "LCS525");
-        Bike b2 = new Bike(TypeBike.ELECTRIC, "LCS555");
+        Bike b1 = FactoryBike.createBike("TRICYCLE", TypeBike.ELECTRIC, "LCS 525");
+        Bike b2 = FactoryBike.createBike("BICYCLE", TypeBike.CONVENTIONAL, "LCS 252");
 
         User u1 = new User.Builder()
                 .name("Sebas")
@@ -36,9 +36,8 @@ public class Main {
 
         s1.goBike(u1);
 
-
-
-        String recibo = s2.arriveBike(b1);
+        Rental rental = new Rental(b1);
+        String recibo = s2.arriveBike(b1, rental);
         System.out.println(recibo);
         System.out.println(BikeGO);
     }

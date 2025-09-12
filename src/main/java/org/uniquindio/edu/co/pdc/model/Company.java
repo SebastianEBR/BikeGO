@@ -2,7 +2,6 @@ package org.uniquindio.edu.co.pdc.model;
 
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.Random;
 
 public class Company {
 
@@ -138,33 +137,38 @@ public class Company {
         }
     }
 
-    public Optional<Rental> findRentalByCode(Random code){
-        return listRental.stream().filter(a -> a.getCode().equals(code)).findFirst();
+    public Optional<Rental> findRentalByCode(int code) {
+        return listRental.stream().filter(a -> a.getCode() == code).findFirst();
     }
 
 
-    public void asignarBikeStation(Bike bike, Station station){
+    public void asignarBikeStation(Bike bike, Station station) {
         Optional<Station> sOptional = findStationByAddress(station.getAddress());
         Optional<Bike> bOptional = findBikeByPlate(bike.getPlate());
-        if (sOptional.isPresent() && bOptional.isPresent()){
+
+        if (sOptional.isPresent() && bOptional.isPresent()) {
             Station sAux = sOptional.get();
             Bike[] bikes = sAux.getBikes();
 
-            for (int i = 0; i < 10; i++){
+            boolean added = false;
+
+            for (int i = 0; i < bikes.length; i++) {
                 Bike bAux = bikes[i];
 
-                if(bAux == null){
+                if (bAux == null) {
                     bikes[i] = bike;
+                    added = true;
                     break;
-                }else{
-                    if (bAux.getPlate().equals(bike.getPlate())){
-                        throw new IllegalArgumentException("no pueden haber 2 bicis con el misma placa: " + bike.getPlate());
-                    }
+                } else if (bAux.getPlate().equals(bike.getPlate())) {
+                    throw new IllegalArgumentException("Ya existe una bici con la placa: " + bike.getPlate());
                 }
             }
-        }else{
-            throw new IllegalArgumentException("no estan presentes: " + bike + station);
-        }
+            if (!added) {
+                throw new IllegalStateException("La estación ya está llena: " + station.getAddress());
+            }
 
+        } else {
+            throw new IllegalArgumentException("No existen la estación o la bici: " + bike + " - " + station);
+        }
     }
 }

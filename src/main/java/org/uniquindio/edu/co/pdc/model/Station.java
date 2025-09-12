@@ -5,16 +5,13 @@ import java.util.Arrays;
 public class Station {
 
     private Bike[] bikes;
-    private int CANTBIKES = 10;
-
-    private Rental rental;
+    private final int CANTBIKES = 10;
     private String address;
 
-    public Station(String address){
+    public Station(String address) {
         this.address = address;
         this.bikes = new Bike[CANTBIKES];
     }
-
 
     public Bike[] getBikes() {
         return bikes;
@@ -24,12 +21,8 @@ public class Station {
         this.bikes = bikes;
     }
 
-    public Rental getRental() {
-        return rental;
-    }
-
-    public void setRental(Rental rental) {
-        this.rental = rental;
+    public int getCANTBIKES() {
+        return CANTBIKES;
     }
 
     public String getAddress() {
@@ -40,41 +33,40 @@ public class Station {
         this.address = address;
     }
 
-    public String arriveBike(Bike bike){
-        Rental rental = Rental.getInstance();
+    public String arriveBike(Bike bike, Rental rental) {
         String receipt = "";
-        for (int i = 0; i < CANTBIKES  ; i++){
-            if (bikes[i] == null){
+        for (int i = 0; i < CANTBIKES; i++) {
+            if (bikes[i] == null) {
                 bikes[i] = bike;
                 User user = bike.getUser();
-                user.setBike(null);
+                if (user != null) {
+                    user.setBike(null);
+                }
                 bike.setUser(null);
 
-                receipt = rental.generateReceipt(bike);
+                rental.endRental();
+                receipt = rental.generateReceipt();
                 break;
             }
         }
         return receipt;
     }
 
-
-    public void goBike(User user){
-        Rental rental = Rental.getInstance();
-        for (int i = 0; i < CANTBIKES  ; i++){
-
-            if (bikes[i] != null){
+    public Rental goBike(User user) {
+        for (int i = 0; i < CANTBIKES; i++) {
+            if (bikes[i] != null) {
                 Bike bAux = bikes[i];
                 user.setBike(bAux);
                 bAux.setUser(user);
                 bikes[i] = null;
+
+                Rental rental = new Rental(bAux);
                 rental.startRental();
-                break;
-            } else{
-                throw new IllegalArgumentException("no hay bicicletas en esta estacion: ");
+                return rental;
             }
         }
+        throw new IllegalArgumentException("No hay bicicletas en esta estación: " + address);
     }
-
 
     @Override
     public String toString() {

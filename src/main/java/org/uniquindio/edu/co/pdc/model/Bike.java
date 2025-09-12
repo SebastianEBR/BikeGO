@@ -1,12 +1,12 @@
 package org.uniquindio.edu.co.pdc.model;
 
-public class Bike {
+public abstract class Bike {
 
     private TypeBike typeBike;
     private String plate;
     private User user;
 
-    public Bike(TypeBike typeBike, String plate) {
+    protected Bike(TypeBike typeBike, String plate) {
         this.typeBike = typeBike;
         this.plate = plate;
     }

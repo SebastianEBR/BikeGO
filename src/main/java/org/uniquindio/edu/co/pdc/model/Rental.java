@@ -6,26 +6,24 @@ import java.util.Random;
 
 public class Rental {
 
-    private static Rental instance;
     private Bike bike;
     private LocalTime startTime;
     private LocalTime endTime;
-    private Random code;
+    private int code;
     private double price;
 
-    private Rental() {
-
-    }
-
-    public static Rental getInstance(){
-        if (instance == null){
-            instance = new Rental();
-        }
-        return instance;
+    public Rental(Bike bike) {
+        this.bike = bike;
+        this.startTime = LocalTime.now();
+        this.code = new Random().nextInt(1000000); // código aleatorio
     }
 
     public Bike getBike() {
         return bike;
+    }
+
+    public void setBike(Bike bike) {
+        this.bike = bike;
     }
 
     public LocalTime getStartTime() {
@@ -44,11 +42,11 @@ public class Rental {
         this.endTime = endTime;
     }
 
-    public Random getCode() {
+    public int getCode() {
         return code;
     }
 
-    public void setCode(Random code) {
+    public void setCode(int code) {
         this.code = code;
     }
 
@@ -60,32 +58,23 @@ public class Rental {
         this.price = price;
     }
 
-    public void startRental() {
-        this.startTime = LocalTime.now();
-    }
+    public void startRental() { this.startTime = LocalTime.now(); }
 
-    public void endRental(Bike bike) {
+
+    public void endRental() {
         this.endTime = LocalTime.now();
-        this.price = calculatePrice(bike);
+        this.price = calculatePrice();
     }
 
-    private double calculatePrice(Bike bike) {
-        double rate;
-
-        if (bike.getTypeBike() == TypeBike.ELECTRIC) {
-            rate = 2000;
-        } else {
-            rate = 1000;
-        }
-
+    private double calculatePrice() {
+        double rate = (bike.getTypeBike() == TypeBike.ELECTRIC) ? 2000 : 1000;
         Duration diff = Duration.between(startTime, endTime);
         long seconds = diff.getSeconds();
         return seconds * rate;
     }
 
-    public String generateReceipt(Bike bike) {
-        endRental(bike);
-        this.code = new Random();
+    public String generateReceipt() {
+        endRental();
         return toString();
     }
 
